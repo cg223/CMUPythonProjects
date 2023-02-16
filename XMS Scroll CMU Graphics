@@ -1,0 +1,46 @@
+def background():
+    app.background = 'black'
+    Rect(20, 150, 360, 100, fill='yellowGreen')
+background()
+
+app.counter = 0
+
+app.songs = {
+    'Mr. Blue Sky': 'Electric Light Orchestra',
+    'Bohemian Rhapsody': 'Queen',
+    'Stairway To Heaven': 'Led Zeppelin',
+    'Wanna Be A Baller': 'Lil\' Troy'
+}
+
+songTitle = 'Mr. Blue Sky'
+artistName = app.songs[songTitle]
+
+app.song = songTitle
+app.artist = f'{artistName:<15}'
+app.index = 0
+
+songDrop = Label(app.song[:13], 201, 201, size=40, font='monospace', fill='seaGreen')
+song = Label(app.song[:13], 199, 199, size=40, font='monospace', fill = 'darkOliveGreen')
+artistDrop = Label(app.artist[:15], 109, 236, size=14, font='monospace', fill='seaGreen')
+artist = Label(app.artist[:15], 108, 235, size=14, font='monospace', fill='darkOliveGreen')
+
+def getXMS(text, index):
+    if len(text) < 13:
+        string = f'{text:<13}'
+    elif index < len(text)-12:
+        string = text[index:index+13]
+    else:
+        num = 13-(len(text) - index)
+        string = f'{text[index:]} {text[:num-1]}'
+    return string
+    
+def onStep():
+    if app.counter % 10 == 0:
+        newStr = getXMS(app.song, app.index)
+        song.value = newStr
+        songDrop.value = newStr
+        if app.index < len(app.song):
+            app.index += 1
+        else:
+            app.index = 0
+    app.counter += 1
