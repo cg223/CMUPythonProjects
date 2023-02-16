@@ -1,0 +1,126 @@
+maze = [
+    ['x', ' ', ' ', ' ', '.'],
+    [' ', 'x', ' ', ' ', ' '],
+    [' ', ' ', 'x', 'x', 'x'],
+    [' ', ' ', '', ' ', ' '],
+    [' ', '-', ' ', ' ', ' ']
+    ]
+    
+class MazeSolver(object):
+    def __init__(self, maze, start, end):
+        self.maze = maze
+        self.x, self.y = 0, 0
+
+        self.height = len(maze)
+        self.width = len(maze[0])
+        
+        self.visualize()
+        
+        self.endSymbol = end
+        if not self.check(self.x, self.y):
+            print('unsolvable!')
+                    
+    def visualize(self):
+        self.drawing = Group(
+            )
+        for x in range(self.width):
+            for y in range(self.height):
+                tile = Rect(x*(400/self.width), y*(400/self.height), 400/self.width, 400/self.height, border='black')
+                #print(x, y)
+                tile.x = x
+                tile.y = y
+                if self.maze[y][x] != 'x':
+                    tile.fill = 'white'
+                
+                self.drawing.add(tile)
+    
+    def check(self, x, y):
+        self.maze[y][x] = 'o'
+        for tile in self.drawing:
+            if tile.x == x and tile.y == y:
+                tile.fill = 'lightGray'
+        
+        #left
+        if x > 0:
+            if self.maze[y][x-1] == ' ':
+                if self.checkFinish(x-1, y):
+                    return True
+                if self.check(x-1, y):
+                    return True
+    
+        #right
+        if x < len(self.maze[0])-1:
+            if self.maze[y][x+1] == ' ':
+                if self.checkFinish(x+1, y):
+                    return True
+                if self.check(x+1, y):
+                    return True
+        
+        #up
+        if y > 0:
+            if self.maze[y-1][x] == ' ':
+                if self.checkFinish(x, y-1):
+                    return True
+                if self.check(x, y-1):
+                    return True
+        
+        #down
+        if y < len(maze)-1:
+            if self.maze[y+1][x] == ' ':
+                if self.checkFinish(x, y+1):
+                    return True
+                if self.check(x, y+1):
+                    return True
+                
+        for tile in self.drawing:
+            if tile.x == x and tile.y == y:
+                tile.fill = 'white'
+        return False
+                
+    def checkFinish(self, x, y):
+        if y > 0:
+            if self.maze[y-1][x] == self.endSymbol:
+                print('finish!')
+                self.maze[y][x] = 'o'
+                self.maze[y-1][x] = 'o'
+                for tile in self.drawing:
+                    if tile.x == x and tile.y == y:
+                        tile.fill = 'lightGray'
+                    if tile.x == x  and tile.y == y-1:
+                        tile.fill = 'lawnGreen'
+                return True
+        if y < len(self.maze)-1:
+            if self.maze[y+1][x] == self.endSymbol:
+                print('finish!')
+                self.maze[y][x] = 'o'
+                self.maze[y+1][x] = 'o'
+                for tile in self.drawing:
+                    if tile.x == x and tile.y == y:
+                        tile.fill = 'lightGray'
+                    if tile.x == x  and tile.y == y+1:
+                        tile.fill = 'lawnGreen'
+                return True
+        if x > 0:
+            if self.maze[y][x-1] == self.endSymbol:
+                print('finish!')
+                self.maze[y][x] = 'o'
+                self.maze[y][x-1] = 'o'
+                for tile in self.drawing:
+                    if tile.x == x and tile.y == y:
+                        tile.fill = 'lightGray'
+                    if tile.x == x-1  and tile.y == y:
+                        tile.fill = 'lawnGreen'
+                return True
+        if x < len(self.maze[0])-1:
+            if self.maze[y][x+1] == self.endSymbol:
+                print('finish!')
+                self.maze[y][x] = 'o'
+                self.maze[y][x+1] = 'o'
+                for tile in self.drawing:
+                    if tile.x == x and tile.y == y:
+                        tile.fill = 'lightGray'
+                    if tile.x == x+1  and tile.y == y:
+                        tile.fill = 'lawnGreen'
+                return True
+                
+solver = MazeSolver(maze, '.', '-')
