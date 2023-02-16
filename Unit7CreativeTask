@@ -1,0 +1,401 @@
+#Manifest Destiny - Guster
+app.beatsPerMinute = 140
+app.restarting = False
+
+###Rhythm
+verseKick =    'X.X.X.X.XXX.X.X.XXX.X.X.XXX.X.X.'
+verseSnare =   '................................'
+
+chorusKick =    'X.X.X.X.X.X.X.X.'
+chorusSnare =   '..X...X...X...X.'
+
+breakdownKick = 'X.X.X.X.'
+breakdownSnare= 'X...X...'
+
+kickIntro = verseKick
+kickVerse = verseKick + verseKick + verseKick + verseKick
+kickChorus = chorusKick + chorusKick + chorusKick + chorusKick + chorusKick + chorusKick + chorusKick + chorusKick
+kickBreakdown = breakdownKick + breakdownKick + breakdownKick + breakdownKick + breakdownKick + breakdownKick
+kickOutro = verseKick
+
+snareIntro = verseSnare
+snareVerse = verseSnare + verseSnare + verseSnare + verseSnare
+snareChorus = chorusSnare + chorusSnare + chorusSnare + chorusSnare + chorusSnare + chorusSnare + chorusSnare + chorusSnare
+snareBreakdown = breakdownSnare + breakdownSnare + breakdownSnare + breakdownSnare + breakdownSnare + breakdownSnare
+snareOutro = verseSnare
+
+kickPattern =  kickIntro + kickVerse + kickChorus + kickVerse + kickChorus + kickBreakdown + kickOutro
+snarePattern = snareIntro + snareVerse + snareChorus + snareVerse + snareChorus + snareBreakdown + snareOutro
+
+###Decode Rhythm
+def decodeRhythm(pattern, octave):
+    notes = []
+    for symbol in pattern:
+        if symbol == 'X':
+            notes.append(Note('C', octave, 1/8))
+        else:
+            notes.append(Note(None, 3, 1/8))
+    return tuple(notes)
+    
+kickNotes = decodeRhythm(kickPattern, 2)
+snareNotes = decodeRhythm(snarePattern, 4)
+
+###Harmony
+verseChords = ['Cmajor', '', 'Cmajor', '', 'Cmajor', '', 'Cmajor', 'Cmajor',
+                'Dminor', '', 'Dminor', '', 'Dminor', '', 'Dminor', 'Dminor',
+                'Gmajor', '', 'Gmajor', '', 'Gmajor', '', 'Gmajor', 'Gmajor',
+                'Gmajor', '', 'Gmajor', '', 'Gmajor', '', 'Gamjor', 'Gmajor'
+                ]
+                
+chorusChords = ['Fmajor', '', 'Fmajor', '', 'Fmajor', '', 'Fmajor', '',
+                'Aminor', '', 'Aminor', '', 'Aminor', '', 'Aminor', '',
+                'Gmajor', '', 'Gmajor', '', 'Gmajor', '', 'Gmajor', '',
+                'Dmajor', '', 'Dmajor', '', 'Dmajor', '', 'Dmajor', '',
+                'Fmajor', '', 'Fmajor', '', 'Fmajor', '', 'Fmajor', '',
+                'Aminor', '', 'Aminor', '', 'Aminor', '', 'Aminor', '',
+                'Gmajor', '', 'Gmajor', '', 'Gmajor', '', 'Gmajor', '',
+                'Gmajor', '', 'Gmajor', '', 'Gmajor', '', 'Gmajor', '',
+                ]
+                
+breakdownChords = [
+                'D#major', '', 'D#major', '',
+                'A#major', '', 'A#major', '',
+                'Asus4', '', '', '',
+                'Asus4', '', '', ''
+                ]
+                
+outroChords = [
+                'Gmajor', '', 'Gmajor', '', 'Gmajor', '', 'Gmajor', '',
+                'Aminor', '', 'Aminor', '', 'Aminor', '', 'Aminor', '',
+                'Dmajor', '', 'Dmajor', '', 'Dmajor', '', 'Dmajor', '',
+                'Cmajor', '', 'Cmajor', '', 'Cmajor', '', 'Cmajor', ''
+                ]
+                
+chordsIntro = verseChords
+chordsVerse = verseChords + verseChords + verseChords + verseChords
+chordsChorus = chorusChords + chorusChords + chorusChords + chorusChords + chorusChords + chorusChords + chorusChords + chorusChords
+chordsBreakdown = breakdownChords
+chordsOutro = outroChords
+
+chords = chordsIntro + chordsVerse + chordsChorus + chordsVerse + chordsChorus + chordsBreakdown + chordsOutro
+
+###Decode Chords
+def decodeChords(chords):
+    rootNotes = []
+    smallIntervalNotes = []
+    bigIntervalNotes = []
+    
+    restNote = Note(None, 3, 1/8)
+    
+    for chord in chords:
+        if chord == '':
+            rootNotes.append(restNote)
+            smallIntervalNotes.append(restNote)
+            bigIntervalNotes.append(restNote)
+        else:
+            if chord[1] == '#':
+                root = chord[:1]
+                quality = chord[2:]
+            else:
+                root = chord[0]
+                quality = chord[1:]
+        
+            rootNote = Note(root, 3, 1/8)
+            
+            if quality == 'major':
+                smallInterval = 4
+                bigInterval = 7
+            if quality == 'minor':
+                smallInterval = 3
+                bigInterval = 7
+            if quality == 'sus4':
+                smallInterval = 5
+                bigInterval = 7
+                
+            smallIntervalNote = rootNote.getNote(smallInterval)
+            bigIntervalNote = rootNote.getNote(bigInterval)
+            
+            rootNotes.append(rootNote)
+            smallIntervalNotes.append(smallIntervalNote)
+            bigIntervalNotes.append(bigIntervalNote)
+
+    print('done!')    
+    return tuple(rootNotes), tuple(smallIntervalNotes), tuple(bigIntervalNotes)
+        
+rootNotesList, smallIntervalNotesList, bigIntervalNotesList = decodeChords(chords)
+
+###Piano Melody
+versePianoMelody =       [1/8,  '............................7.9B']
+chorusPianoMelody1 =     [1/12, 'C95C95C95C95GC9GC9GC9GC9EB7EB7EB7EB7962962962962']
+chorusPianoMelody2 =     [1/12, 'C95C95C95C95GC9GC9GC9GC9EB7EB7EB7EB7EB7EB7EB7EB7']
+breakdownPianoMelody =   [1/8,  '................']
+outroPianoMelody =       [1/8,  '................................']
+
+pianoMelodyIntro = versePianoMelody
+pianoMelodyVerse = versePianoMelody + versePianoMelody + versePianoMelody + versePianoMelody
+pianoMelodyChorus = chorusPianoMelody1 + chorusPianoMelody2 + chorusPianoMelody1 + chorusPianoMelody2 + chorusPianoMelody1 + chorusPianoMelody2 + chorusPianoMelody1 + chorusPianoMelody2
+pianoMelodyBreakdown = breakdownPianoMelody
+pianoMelodyOutro = outroPianoMelody
+
+pianoMelodyPattern = pianoMelodyIntro + pianoMelodyVerse + pianoMelodyChorus + pianoMelodyVerse + pianoMelodyChorus + pianoMelodyBreakdown + pianoMelodyOutro
+
+###Decode Piano Melody
+def decodePianoMelody(pattern):
+    notes = []
+    restNote = Note(None, 3, 1/8)
+    rootNote = Note('C', 3, 1/8)
+    currentDuration = 1/8
+    for value in pattern:
+        if type(value) == float:
+            currentDuration = value
+        else:
+            for symbol in value:
+                if symbol == '.':
+                    newRestNote = restNote
+                    newRestNote.dur = currentDuration
+                    notes.append(newRestNote)
+                else:
+                    pitch = int(symbol, 20)
+                    newNote = rootNote.getNote(pitch)
+                    newNote.dur = currentDuration
+                    notes.append(newNote)
+    return tuple(notes)
+    
+#pianoMelodyNotes = decodePianoMelody(pianoMelodyPattern)
+
+###Vocal Melody
+introVocalMelody =       '................................'
+
+verseVocalMelody1 =      '..GGGGCEECECECC7777.............'
+verseVocalMelody2 =      '...CGGCEEE..EEC7777.........CEEG'
+verseVocalMelody3 =      'GGGGGEEEEGGGGEECC...........CEEG'
+verseVocalMelody4 =      'GGGGGEEEEGGGGEECC...............'
+
+chorusVocalMelody1 =     '99BCCEEGGGGG..C7779BBCEEEEE..CCC'
+chorusVocalMelody2 =     'CCCC99..CCCC99BB................'
+
+breakdownVocalMelody1 =  '...AFFFEECEEECAAEEEEEEEEEEEEEIIH'
+breakdownVocalMelody2 =  'HEEEEEEEEEEEEE..................'
+
+outroVocalMelody =       '................................'
+
+vocalMelodyIntro = introVocalMelody
+vocalMelodyVerse = verseVocalMelody1 + verseVocalMelody2 + verseVocalMelody3 + verseVocalMelody4
+vocalMelodyChorus = chorusVocalMelody1 + chorusVocalMelody2 + chorusVocalMelody1 + chorusVocalMelody2
+vocalMelodyBreakdown = breakdownVocalMelody1 + breakdownVocalMelody2
+vocalMelodyOutro = outroVocalMelody
+
+vocalMelodyPattern = vocalMelodyIntro + vocalMelodyVerse + vocalMelodyChorus + vocalMelodyVerse + vocalMelodyChorus + vocalMelodyBreakdown + vocalMelodyOutro
+
+###Vocal Harmony
+introVocalHarmony =      '................................'
+
+verseVocalHarmony1 =     '................................'
+verseVocalHarmony2 =     '...............................9'
+verseVocalHarmony3 =     '999999999BBBB7755..............9'
+verseVocalHarmony4 =     '999999999BBBB7755...............'
+
+chorusVocalHarmony1 =    '.......99999.................555'
+chorusVocalHarmony2 =    '555522..77774444................' 
+
+breakdownVocalHarmony1 = '...3AAA7757775337777777777777BBA'
+breakdownVocalHarmony2 = 'A7777777777.....................'
+
+outroVocalHarmony =      '................................'
+
+vocalHarmonyIntro = introVocalHarmony
+vocalHarmonyVerse = verseVocalHarmony1 + verseVocalHarmony2 + verseVocalHarmony3 + verseVocalHarmony4
+vocalHarmonyChorus = chorusVocalHarmony1 + chorusVocalHarmony2 + chorusVocalHarmony1 + chorusVocalHarmony2
+vocalHarmonyBreakdown = breakdownVocalHarmony1 + breakdownVocalHarmony2
+vocalHarmonyOutro = outroVocalHarmony
+
+vocalHarmonyPattern = vocalHarmonyIntro + vocalHarmonyVerse + vocalHarmonyChorus + vocalHarmonyVerse + vocalHarmonyChorus + vocalHarmonyBreakdown + vocalHarmonyOutro
+
+###Decode Vocal Melody
+def decodeVocalMelody(melody):
+    notes = []
+    restNote = Note(None, 3, 1/8)
+    rootNote = Note('c', 4, 1/8)
+    for symbol in melody:
+        if symbol == '.':
+            notes.append(restNote)
+        else:
+            pitch = int(symbol, 19)
+            notes.append(rootNote.getNote(pitch))
+    return tuple(notes)
+
+vocalMelodyNotes = decodeVocalMelody(vocalMelodyPattern)
+vocalHarmonyNotes = decodeVocalMelody(vocalHarmonyPattern)
+
+###Bass
+verseBass =     '0.0.0.002.2.2.227.7.7.777.7.7.77'
+chorusBass =    '4.4.4.449.9.9.997.7.7.772.2.2.224.4.4.449.9.9.997.7.7.777.7.7.77'
+breakdownBass = '3.3.A.A.9...9...'
+outroBass =     '7.7.7.7.9.9.9.9.2.2.2.2.0.0.0.0.'
+
+bassIntro = verseBass
+bassVerse = verseBass + verseBass + verseBass + verseBass
+bassChorus = chorusBass + chorusBass + chorusBass + chorusBass + chorusBass + chorusBass + chorusBass + chorusBass
+bassBreakdown = breakdownBass
+bassOutro = outroBass + outroBass + outroBass + outroBass
+
+bassPattern = bassIntro + bassVerse + bassChorus + bassVerse + bassChorus + bassBreakdown + bassOutro
+
+###DecodeBass
+def decodeBass(pattern):
+    notes = []
+    restNote = Note(None, 3, 1/8)
+    rootNote = Note('c', 3, 1/8)
+    for symbol in pattern:
+        if symbol == '.':
+            notes.append(restNote)
+        else:
+            pitch = int(symbol, 16)
+            notes.append(rootNote.getNote(pitch))
+    return tuple(notes)
+
+bassNotes = decodeBass(bassPattern)
+            
+###Visualizer
+colors = ['crimson', 'orange', 'yellow', 'greenYellow', 'lightSeaGreen', 'mediumSlateBlue', 'darkOrchid', 'indigo']
+app.background = 'black'
+rangeToRect = {8: None}
+for i in range(8):
+    rects = [Rect(20 + i * (360/8), 190, 44.9, 20, fill=colors[i]),
+            Rect(20 + i * (360/8), 210, 44.9, 20, fill=gradient(colors[i], 'black', start='top'))]
+    rangeToRect[i] = rects
+noteToRange = [
+                [0, 'C3', 'C#3', 'D3','D#3'],
+                [1, 'E3', 'F3','F#3', 'G3'],
+                [2, 'G#3','A3', 'A#3', 'B3'],
+                [3, 'C4', 'C#4', 'D4', 'D#4'],
+                [4, 'E4', 'F4', 'F#4', 'G4'],
+                [5, 'G#4', 'A4', 'A#4', 'B4'],
+                [6, 'C5', 'C#5', 'D5', 'D#5'],
+                [7, 'E5', 'F5', 'F#5', 'G5'],
+            ]
+
+###Sequencers
+sequencers = []
+
+kickSequencer = Sequencer(kickNotes, instrument='tom-drum', name='Tom')
+snareSequencer = Sequencer(snareNotes, instrument='snare-drum', name='Snare')
+pianoRootSequencer = Sequencer(rootNotesList, name='Roots')
+pianoSmallIntervalSequencer = Sequencer(smallIntervalNotesList, name='Small Intervals')
+pianoBigIntervalSequencer = Sequencer(bigIntervalNotesList, name='Big Intervals')
+vocalMelodySequencer = Sequencer(vocalMelodyNotes, instrument='wave', name='Vocal Melody', volume=0.8)
+bassSequencer = Sequencer(bassNotes, instrument='bass', name='Bass')
+#pianoMelodySequencer = Sequencer(pianoMelodyNotes, name='Piano Melody', volume=1)
+vocalHarmonySequencer = Sequencer(vocalHarmonyNotes, instrument='wave', name='Vocal Harmony', volume=0.7)
+
+sequencers.append(kickSequencer)
+sequencers.append(snareSequencer)
+sequencers.append(pianoRootSequencer)
+sequencers.append(pianoSmallIntervalSequencer)
+sequencers.append(pianoBigIntervalSequencer)
+sequencers.append(vocalMelodySequencer)
+sequencers.append(bassSequencer)
+#sequencers.append(pianoMelodySequencer)
+sequencers.append(vocalHarmonySequencer)
+
+###User Interface
+playButton = Rect(20, 20, 200, 70, fill=None, border='white')
+playSign = RegularPolygon(45, 55, 30, 3, fill='white', rotateAngle = 90, visible = True)
+pauseSign = Group(
+    Rect(30, 30, 15, 50, fill='white'),
+    Rect(55, 30, 15, 50, fill='white')
+    )
+pauseSign.visible = False
+playPauseLabel = Label('PLAY', 147, 55, fill='white', size=50, bold=True)
+
+restartButton = Rect(230, 20, 150, 70, fill=None, border='white')
+restartCircle = Circle(265, 55, 25, fill=None, border='white', borderWidth=5)
+restartBlock = Rect(270, 45, 25, 20)
+restartArrow = Line(286, 45.7, 283, 43, arrowStart=True, fill='white')
+restartSymbol = Group(
+    restartCircle, restartBlock, restartArrow
+)
+RestartLabel = Label('RESTART', 320, 55, fill='white', bold=True, size=20)
+
+###Now Playing
+nowPlayingLabel = Label('NOW PLAYING', 200, 350, fill='white', size=12, bold=True)
+SongLabel = Label('MANIFEST DESTINY - GUSTER', 160, 370, fill='white', size=18, bold=True)
+cols = []
+for i in range(8):
+    x = 300 + i * 10
+    cols.append(Rect(x-2, 372, 4, 5, fill='white'))
+app.index = 0
+length = len(cols)
+app.counter = 0
+
+###On Step
+def onStep():
+    if playPauseLabel.value == 'PAUSE':
+        for col in cols:
+            bottom = col.bottom
+            col.height = 5
+            col.bottom = bottom
+        bottom = cols[app.index].bottom
+        cols[app.index].height = 8
+        cols[app.index].bottom = bottom
+        if app.counter % 14 == 0:
+            app.index += 1
+            if app.index >= length:
+                app.index = 0
+        app.counter += 1
+        
+    if app.restarting:
+        restartSymbol.rotateAngle += 40
+        if restartSymbol.rotateAngle % 360 == 0:
+            app.restarting = False
+
+###Mouse Press
+def onMousePress(x, y):
+    if playButton.contains(x, y):
+        if playPauseLabel.value == 'PLAY':
+            for sequencer in sequencers:
+                sequencer.play()
+            playPauseLabel.value = 'PAUSE'
+            playPauseLabel.size=40
+            playSign.visible = False
+            pauseSign.visible = True
+        else:
+            for sequencer in sequencers:
+                sequencer.pause()
+            playPauseLabel.value = 'PLAY'
+            playPauseLabel.size = 50
+            playSign.visible = True
+            pauseSign.visible = False
+    if restartButton.contains(x, y):
+        for sequencer in sequencers:
+            sequencer.play(restart=True)
+        playPauseLabel.value = 'PAUSE'
+        playPauseLabel.size=40
+        playSign.visible = False
+        pauseSign.visible = True
+        app.restarting = True
+        
+###Visualizer Control
+def onSignal(noteSequence):
+    for ns in noteSequence:
+        note = f'{ns[0].pitch}{ns[0].octave}'
+        if not 'None' in note:
+            rng = 0
+            for group in noteToRange:
+                if note in group:
+                    rng = group[0]
+            rectList = rangeToRect[rng]
+            if ns[-1] == 'Note Start':
+                bottom = rectList[0].bottom
+                rectList[0].height += 40
+                rectList[0].bottom = bottom
+                top = rectList[1].top
+                rectList[1].height += 30
+                rectList[1].top = top
+            else:
+                bottom = rectList[0].bottom
+                rectList[0].height -= 40
+                rectList[0].bottom = bottom
+                top = rectList[1].top
+                rectList[1].height -= 30
+                rectList[1].top = top
