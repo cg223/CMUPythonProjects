@@ -1,0 +1,140 @@
+app.beatsPerMinute = 152
+
+def createMelody(notes):
+    melody = []
+    for note in notes:
+        melody.append(Note(note[0], note[1], note[2]))
+    return tuple(melody)
+    
+#img = Image('https://upload.wikimedia.org/wikipedia/commons/6/6f/Beethoven.jpg', 0, 0, width=400, height=450) 
+def drawPiano():
+    app.keys = []
+    app.background='black'
+    numToPitch = {
+        0: 'e',
+        1: 'f',
+        2: 'g',
+        3: 'a',
+        4: 'b',
+        5: 'c',
+        6: 'd'
+    }
+    #draws white keys
+    for i in range(35):
+        key = Rect(11.42*i, 175, 11.42, 50, fill='white', border='black')
+        pitch = numToPitch[i%7]
+        octave = i//7+2
+        if pitch == 'a' or pitch == 'b' or pitch == 'c' or pitch == 'd':
+            octave += 1
+        key.note = f'{pitch}{octave}'
+        key.color = 'white'
+        app.keys.append(key)
+    #draws black keys
+    for i in range(35):
+        if i % 7 != 0 and i % 7 != 4:
+            key = Rect(6.42+i*11.42, 175, 10, 30, border='black')
+            pitch = f'{numToPitch[i%7]}#'
+            octave = i//7+2
+            if pitch == 'a#' or pitch == 'c#' or pitch == 'd#':
+                octave += 1
+            key.note = f'{pitch}{octave}'
+            key.color = 'black'
+            app.keys.append(key)
+drawPiano()
+Label('Moonlight Sonata Movement 3 Op. 27 No. 2 - Ludwig van Beethoven', 200, 150, bold=True, fill='white')
+
+#[pitch, octave, duration]
+notes1 = [
+        ['e', 2, 1/16], ['a', 3, 1/16], ['c', 3, 1/16], ['e', 3, 1/16], ['a', 3, 1/16],
+        ['c', 3, 1/16], ['e', 3, 1/16], ['a', 4, 1/16], ['c', 3, 1/16], ['e', 3, 1/16],
+        ['a', 4, 1/16], ['c', 4, 1/16], ['e', 3, 1/16], ['a', 4, 1/16], ['c', 4, 1/16],
+        ['e', 4, 1/16], ['a', 4, 1/16], ['c', 4, 1/16], ['e', 4, 1/16], ['a', 5, 1/16],
+        ['c', 4, 1/16], ['e', 4, 1/16], ['a', 5, 1/16], ['c', 5, 1/16], ['e', 4, 1/16],
+        ['a', 5, 1/16], ['c', 5, 1/16], ['e', 5, 1/16], ['e', 5, 1/8], ['e', 2, 1/16],
+        ['g#', 2, 1/16], ['b', 3, 1/16], ['e', 3, 1/16], ['g#', 2, 1/16], ['b', 3, 1/16],
+        ['e', 3, 1/16], ['g#', 3, 1/16], ['b', 3, 1/16], ['e', 3, 1/16], ['g#', 3, 1/16],
+        ['b', 4, 1/16], ['e', 3, 1/16], ['g#', 3, 1/16], ['b', 4, 1/16], ['e', 4, 1/16],
+        ['g#', 3, 1/16], ['b', 4, 1/16], ['e', 4, 1/16], ['g#', 4, 1/16], ['b', 5, 1/16],
+        ['e', 5, 1/16], ['g#', 5, 1/16], ['b', 5, 1/16], ['e', 5, 1/16], ['g#', 5, 1/16],
+        ['b', 6, 1/16], ['e', 5, 1/16], ['g#', 5, 1/16], ['b', 6, 1/16], ['e', 5, 1/16],
+        ['e', 5, 1/8], ['a', 3, 1/16], ['c#', 3, 1/16], ['e', 3, 1/16], ['a', 4, 1/16],
+        ['c#', 3, 1/16], ['e', 3, 1/16], ['a', 4, 1/16], ['c#', 4,  1/16], ['e', 4, 1/16],
+        ['a', 4, 1/16], ['c#', 4, 1/16], ['e', 4, 1/16], ['a', 4, 1/16], ['c#', 4, 1/16],
+        ['e', 4, 1/16], ['a', 5, 1/16], ['c#', 4, 1/16], ['e', 4, 1/16], ['a', 5, 1/16],
+        ['c#', 5, 1/16], ['a', 5, 1/16], ['c#', 5, 1/16], ['e', 5, 1/16], ['a', 6, 1/16],
+        ['a', 6, 1/8], ['a', 3,1/16], ['d', 3, 1/16], ['f', 4, 1/16], ['a', 5, 1/16],
+        ['a', 5, 1/16], ['d', 5, 1/16], ['f', 5, 1/16], ['a', 6, 1/16], ['a', 6, 1/16],
+        ['d', 6, 1/16], ['f', 6, 1/16], ['a', 7, 1/16], ['a', 7, 1/8], ['a', 3, 1/16],
+        ['c', 3, 1/16], ['d#', 3, 1/16], ['a', 4, 1/16], ['a', 4, 1/16], ['c', 4, 1/16],
+        ['d#', 4, 1/16], ['a', 5, 1/16], ['a', 5, 1/16], ['c', 5, 1/16], ['d#', 5, 1/16],
+        ['a', 6, 1/16], ['a', 6, 1/8], ['g#', 5, 1/16], ['e', 4, 1/16], ['e', 5, 1/16],
+        ['e', 4, 1/16], ['e', 5, 1/16], ['f#', 4, 1/16], ['e', 5, 1/16], ['g#', 4, 1/16],
+        ['e', 5, 1/16], ['a', 5, 1/16], ['e', 5, 1/16], ['b', 5, 1/16], ['e', 5, 1/16],
+        ['g#', 4, 1/16], ['e', 5, 1/16], ['b', 5, 1/16], ['e', 5, 1/16], ['g#', 4, 1/16],
+        ['e', 5, 1/16], ['a', 5, 1/16], ['e', 5, 1/16], ['d', 5, 1/16], ['e', 5, 1/16],
+        ['c', 5, 1/16], ['b', 5, 1/16], ['e', 5, 1/16], ['a', 5, 1/16], ['e', 5, 1/16],
+        ['g#', 4, 1/16], ['e', 5, 1/16], ['f', 4, 1/16], ['d#', 5, 1/16], ['e', 4, 1/16],
+        ['e', 5, 1/16], ['e', 4, 1/16], ['e', 5, 1/16], ['e', 4, 1/16], ['e', 5, 1/16],
+        ['f#', 4, 1/16], ['e', 5, 1/16], ['g#', 4, 1/16], ['e', 5, 1/16], ['a', 5, 1/16],
+        ['e', 5, 1/16], ['b', 5, 1/16], ['e', 5, 1/16], ['g#', 4, 1/16], ['e', 5, 1/16],
+        ['b', 5, 1/16], ['e', 5, 1/16], ['a', 4, 1/16], ['e', 5, 1/16], ['d', 5, 1/16],
+        ['e', 5, 1/16], ['c', 5, 1/16], ['e', 5, 1/16], ['b', 5, 1/16], ['e', 5, 1/16],
+        ['a', 5, 1/16], ['e', 5, 1/16], ['g#', 4, 1/16], ['e', 5, 1/16], ['f', 4, 1/16],
+        ['d#', 5, 1/16], ['e', 4, 1/16], ['e', 5, 1/16], ['f', 4, 1/16], ['d#', 5, 1/16],
+        ['e', 4, 1/16], ['e', 5, 1/16], ['f', 4, 1/16], ['d#', 5, 1/16], ['e', 4, 1/16],
+        ['e', 5, 1/16], ['f', 4, 1/16], ['d#', 5, 1/16], ['e', 4, 1/16], ['e', 5, 1/16],
+        ['f', 4, 1/16], ['d#', 5, 1/16], ['e', 5, 1/16], ['f', 4, 1/16], ['f', 4, 1/16],
+        ['e', 2, 1/16], ['a', 3, 1/16], ['c', 3, 1/16], ['e', 3, 1/16], ['a', 3, 1/16],
+        ['c', 3, 1/16], ['e', 3, 1/16], ['a', 4, 1/16], ['c', 3, 1/16], ['e', 3, 1/16],
+        ['a', 4, 1/16], ['c', 4, 1/16]
+        ]
+        
+notes2 = [
+        [None, 3, 28.5/16], ['c', 5, 1/16], ['c', 5, 1/8],
+        [None, 3, 31.5/16], ['b', 5, 1/16], ['b', 5, 1/8],
+        ['c', 5, 1/16]
+    ]
+    
+notes3 = [
+        [None, 3, 28.5/16], ['a', 5, 1/16], ['a', 5, 1/8],
+        [None, 3, 31.5/16], ['g#', 4, 1/16], ['g#', 4, 1/8],
+        ['g#', 4, 1/16]
+    ]
+
+notes4 = [
+        [None, 3, 28.5/16], ['e', 4, 1/16], ['e', 4, 1/8],
+        [None, 3, 30.5/16], ['e', 4, 1/16], ['e', 4, 1/8],
+        ['c', 4, 1/16]
+    ]
+    
+melody1 = createMelody(notes1)
+melody2 = createMelody(notes2)
+melody3 = createMelody(notes3)
+melody4 = createMelody(notes4)
+piano1 = Sequencer(melody1, name='Piano 1', instrument='piano')
+piano2 = Sequencer(melody2, name='Piano 2')
+piano3 = Sequencer(melody3, name='Piano 3')
+piano4 = Sequencer(melody4, name='Piano 4')
+
+def onKeyPress(key):
+    piano1.play()
+    # piano2.play()
+    # piano3.play()
+    # piano4.play()
+        
+def onSignal(noteSequences):
+    for ns in noteSequences:
+        if ns[-1] == 'Note Start':
+            print(f'Pitch: {ns[0].pitch} Octave: {ns[0].octave} Duration: {ns[0].duration}')
+            for key in app.keys:
+                if ns[0].pitch != None:
+                    pitch = ns[0].pitch.lower()
+                else:
+                    pitch = None
+                if key.note == f'{pitch}{ns[0].octave}':
+                    key.fill = 'darkGray'
+                else:
+                    key.fill = key.color
+    #empty lines between each note played
+    #If they are played simultaneously, there will be no space
+    print()
